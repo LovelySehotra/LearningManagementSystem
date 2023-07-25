@@ -1,7 +1,7 @@
 import { Schema,model } from "mongoose";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-const userSchema = new School({
+const userSchema = new Schema({
 
     fullName:{
         type:'String',
@@ -30,7 +30,7 @@ const userSchema = new School({
             type:'String',
         },
         secure_url:{
-            type:'Stirng'
+            type:'String'
         }
     },
     role:{
