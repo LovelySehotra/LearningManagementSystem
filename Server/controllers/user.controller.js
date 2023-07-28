@@ -1,5 +1,8 @@
+import { send } from "process";
 import User from "../models/user.model.js";
 import AppError from "../utils/error.util.js";
+import cloudinary from "cloudinary";
+import fs from 'fs/promises'
 const cookieOption = {
     maxAge:7 * 24 * 60 *60 *1000,
     httpOnly :true,
@@ -30,7 +33,29 @@ const register = async (req,res)=>{
         return next (new AppError('User registration failed,please try again'));
     }
     // TODO FILE upload
+    if(req.file)
+    {
+        try {
+            const result = await cloudinary.v2.uploader.upload(req.file.path,{
+                folder:'lms',
+                width:250,
+                height:250,
+                gravity:'faces',
+                crop:'fill'
+            });
+            if(result){
+                user.avatar.public_id=result.public_id;
+                user.avatar.secure_url=result.secure_url;
 
+                // remove file from server
+                fs.rm(`uploads/${req.file.filename}`)
+            }
+        } catch (e) {
+            return next(
+                new AppError(error || 'File not uplades,please try again',500)
+            )
+        }
+    }
     await user.save();
     user.password = undefined;
 
@@ -92,9 +117,45 @@ const getProfile =async (req,res)=>{
         return next(new AppError('Failed to fetch profile detail'))
     }
 };
+
+const forgotPassword =async (req,res)=>{
+        const {email}=req.body;
+
+        if(!email){
+            return next(new AppError('Email is required'),400);
+        }
+        const user = await User.findOne({email});
+        if(!user){
+            return next(new AppError('Email is not  registered'),400);
+
+        }
+        const resetToken = await user.generatePasswordResetToken();
+        await user.save();
+
+        const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        try {
+            await sendEmail(email,subject,message);
+
+            res.status(200).json({
+                success:true,
+                message:`Reset password token has been sent to ${email} successfully`
+            })
+        } catch (e) {
+            
+            user.forgotPasswordExpiry=undefined;
+            user.forgotPasswordToken=undefined;
+            await user.save();
+            return next(new AppError(e.message,500));
+        }
+}
+const resetPassword =(req,res)=>{
+
+}
 export {
     register,
     login,
     logout,
-    getProfile
+    getProfile,
+    forgotPassword,
+    resetPassword
 }
