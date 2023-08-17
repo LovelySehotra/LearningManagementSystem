@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.set('strictQuery',false);
+mongoose.set('strictQuery',false);// strict mode is used to ignore error if we want extra info and that info is not present. 
 
 const connectionToDB = async()=>{
     try{
@@ -12,7 +12,7 @@ const connectionToDB = async()=>{
         }
     }catch(e){
         console.log(e);
-        process.exit(1);
+        process.exit(1);//terminate the server because database is not connect
     }
 }
 export default connectionToDB;

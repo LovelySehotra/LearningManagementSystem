@@ -18,13 +18,14 @@ const userSchema = new Schema({
         lowercase :true,
         trim : true,
         unique: true,
-        match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,'Please filll in a valid email address']
+        match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        'Please filll in a valid email address']
     },
     password :{
         type : 'String',
         required:[true,'Password is required'],
         minLength:[8,'Password must be at 8 character'],
-        select:false
+        select:false   // dont send by default password.
     },
     avatar:{
         public_id:{
@@ -44,12 +45,17 @@ const userSchema = new Schema({
 
 },
 {
-    timestanps:true
+    timestanps:true  
 });
+// encrypt the password 
+//  'pre' is used for: before save the user 
+
 userSchema.pre('save',async function(next){
+    // if password is not modified return next.
     if(!this.isModified('password')){
         return next();
     }
+    // if modified then encypt and add random character
     this.password = await bcrypt.hash(this.password,10);
     
 })
@@ -57,7 +63,7 @@ userSchema.pre('save',async function(next){
 userSchema.methods ={
     generateJWTToken : async function(){
         return await jwt.sign(
-            {  id:this._id,email:this.email,subscription:this.subscription},
+            {  id:this._id,email:this.email,subscription:this.subscription,role:this.role},
                 process.env.JWT_SECRET,
 
             {
@@ -79,5 +85,5 @@ userSchema.methods ={
         return resetToken;
     }
 }
-const User = model('User',userSchema);
+const User = model('User',userSchema);//collection name in database is User
 export default User;

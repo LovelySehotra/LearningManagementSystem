@@ -4,22 +4,23 @@ import AppError from "../utils/error.util.js";
 import cloudinary from "cloudinary";
 import fs from 'fs/promises'
 const cookieOption = {
-    maxAge:7 * 24 * 60 *60 *1000,
+    maxAge:7 * 24 * 60 *60 *1000,// 7days,
     httpOnly :true,
     secure:true
 }
 
-const register = async (req,res)=>{
+const register = async (req,res,next)=>{
     const {fullname,email,password}=req.body;
     if(!fullname || !email || !password)
     {
         return next(new AppError('All fields are required',400));
     }
-
+    // check user exit by using email.
     const userExists = await User.findone({email});
     if(userExists){
         return next(new AppError('Email already exists',400));
     }
+    //create user 
     const user = await User.create({
         fullname,
         email,
@@ -29,6 +30,7 @@ const register = async (req,res)=>{
             // secure_url:
         }
     });
+    // check user is stored or not
     if(!user){
         return next (new AppError('User registration failed,please try again'));
     }
@@ -56,10 +58,15 @@ const register = async (req,res)=>{
             )
         }
     }
-    await user.save();
-    user.password = undefined;
 
-    const token = await user.generateJWTToken();
+    //  after  create the user save it
+    await user.save();
+    user.password = undefined; // dont want send what password had user setup.
+
+    // after register auto login the user 
+    // step 1 : generate JWT token 
+    const token = await user.generateJWTToken(); // ->define in user.model,js
+   // step 2: set toekn in cookies
     res.cookie('token',token,cookieOption)
     res.status(201).json({
         success:true,
@@ -77,7 +84,7 @@ const login =async (req,res)=>{
     }
     const user = await User.findOne({
         email
-    }).select('+password');
+    }).select('+password');   // explicity getting the password
     if(!user || !user.comparePassword(password))
     {
         return next(new AppError('Email or password does not exist',400));
@@ -118,7 +125,7 @@ const getProfile =async (req,res)=>{
     }
 };
 
-const forgotPassword =async (req,res)=>{
+const forgotPassword =async (req,res,next)=>{
         const {email}=req.body;
 
         if(!email){
@@ -133,6 +140,8 @@ const forgotPassword =async (req,res)=>{
         await user.save();
 
         const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        
+        const message =`${resetPassword}`;
         try {
             await sendEmail(email,subject,message);
 
