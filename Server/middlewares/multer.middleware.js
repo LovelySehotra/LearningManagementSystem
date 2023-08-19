@@ -12,7 +12,7 @@ const upload = multer({
     }),
     fileFilter:(_req,file,cb)=>{
         let ext = path.extreme(file.originalname);
-        // console.log('Filter>',file);
+        // console.log('Filter>',file);.
         if(
             ext!==".jpg" &&
             ext!==".jpeg" &&

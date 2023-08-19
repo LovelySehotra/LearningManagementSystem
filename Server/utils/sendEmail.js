@@ -1,5 +1,5 @@
 "use strict";
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 const sendEmail = async function (email,subject,message){
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
     from: process.env.SMTP_FROM_EMAIL,
     to: email, // list of receivers
     subject:  subject, // Subject line
-    text: "Hello world?", // plain text body
+    // plain text body
     html: message, // html body
   });
 

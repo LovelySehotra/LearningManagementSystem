@@ -13,7 +13,7 @@ origin:[process.env.FRONTEND_URL],
 credential:true
 }));
 app.use(cookieParser());//used to parse the token in cookie
-
+app.use(express.urlencoded({extended:true}));
 app.use(morgan('dev'));// it is used to see in terminal thsat what  user access.
 
 app.use('/ping',function(req,res){
@@ -26,3 +26,6 @@ app.all('*',(req,res)=>{  // for any random url that are not defined.
 });
 app.use(errorMiddleware);
 export default app;
+
+
+//  multer is for converting binary into image
