@@ -4,7 +4,8 @@ import cookieParser from 'cookie-parser';
 import {config} from 'dotenv';
 import morgan from 'morgan';
 import userRoutes from './routes/user.routrs.js';
-import courseRoutes from './routes/course.routes.js'
+import courseRoutes from './routes/course.routes.js';
+import paymentRoutes from './routes/payment.routes.js'
 import errorMiddleware from './middlewares/error.middleware.js';
 config();
 const app = express();
@@ -23,6 +24,7 @@ app.use('/ping',function(req,res){
 //routes of 3 modules 
 app.use('/api/v1/user',userRoutes);
 app.use('/api/v1/courses',courseRoutes);
+app.use('/api/v1/payments',paymentRoutes);
 app.all('*',(req,res)=>{  // for any random url that are not defined.
     res.status(404).send(`OOPS!! 404 page not found`);
 });
