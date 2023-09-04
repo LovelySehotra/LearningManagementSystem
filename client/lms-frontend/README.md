@@ -26,5 +26,8 @@ npm i
 npm run dev
 
 ```
+### Setup instruction for tailwind 
+
+[Tailwind offical instruction doc](https://tailwindcss.com/docs/guides/vite)
 
 
