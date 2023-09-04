@@ -31,3 +31,9 @@ npm run dev
 [Tailwind offical instruction doc](https://tailwindcss.com/docs/guides/vite)
 
 
+###  Adding pluging and dependencies
+
+```
+@reduxjs/toolkit react-redux react-router-dom react-icons react-chartjs-2 chart.js daisyui axios react-hot-toast @tailwindcss/line-clamp
+
+```
