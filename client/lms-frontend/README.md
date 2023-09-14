@@ -30,6 +30,11 @@ npm run dev
 
 [Tailwind offical instruction doc](https://tailwindcss.com/docs/guides/vite)
 
+Add the following details in the plugin of tailwind config
+
+```
+  require("daisyui")
+```
 
 ###  Adding pluging and dependencies
 
