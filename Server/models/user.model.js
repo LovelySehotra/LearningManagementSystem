@@ -18,8 +18,8 @@ const userSchema = new Schema({
         lowercase: true,
         trim: true,
         unique: true,
-        match: [/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            'Please filll in a valid email address']
+        // match: [/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        //     'Please filll in a valid email address']
     },
     password: {
         type: 'String',
@@ -51,7 +51,7 @@ const userSchema = new Schema({
         timestanps: true
     });
 // encrypt the password 
-//  'pre' is used for: before save the user 
+//  'pre' is used for before save the user perform the callback. 
 
 userSchema.pre('save', async function (next) {
     // if password is not modified return next.
@@ -77,14 +77,14 @@ userSchema.methods = {
     comparePassword: async function (plainTextPassword) {
         return await bcrypt.compare(plainTextPassword, this.password);
     },
-    generatePasswordResetToekn: async function () {
+    generatePasswordResetToken: async function () {
         const resetToken = crypto.randomBytes(20).toString('hex');
-
-        this.forgetPasswordToken = crypto
+        console.log('resetToken:', resetToken);
+        this.forgotPasswordToken = crypto
             .createHash('sha256')
             .update(resetToken)
-            .digest('hex')
-        this.forgotPasswordExpiry = Date.now() + 15 * 60 * 100; //15 min from now
+            .digest('hex');
+        this.forgotPasswordExpiry = Date.now() + 15 * 60 * 1000; // 15 min from now
         return resetToken;
     }
 }

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.set('strictQuery',false);// strict mode is used to ignore error if we want extra info and that info is not present. 
+mongoose.set('strictQuery',false);//Dont give error incase extra passed detail in notfound  
 
 const connectionToDB = async()=>{
     try{

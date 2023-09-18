@@ -6,20 +6,20 @@ import connectionToDB from './config/dbconnection.js';
 import cloudinary from 'cloudinary';
 import Razorpay from 'razorpay';
 
-const PORT = process.env.PORT|| 5000;
+const PORT = process.env.PORT|| 5173;
 
 //Cloudinary configuration
 cloudinary.v2.config({
     cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-    api_key:process.env.CLOUDINARY_API_KEY,
+    api_key: process.env.CLOUDINARY_API_KEY,
     api_secret:process.env.CLOUDINARY_API_SECRET,
 });
 
-export const razorpay = new Razorpay({
+export const razorpay = new Razorpay({  
     key_id:process.env.RAZORPAY_KEY_ID,
     key_secret:process.env.RAZORPAY_SECRET,
 });
 app.listen(PORT,async()=>{
     await connectionToDB();
-    console.log(`Server is listen at PORT ${PORT}`);
+    console.log(`Server is listen at PORT http:localhost:${PORT}`);
 });

@@ -12,24 +12,24 @@ const cookieOption = {
 }
 
 const register = async (req,res,next)=>{
-    const {fullname,email,password}=req.body;
-    if(!fullname || !email || !password)
+    const {fullName,email,password}=req.body;
+    if(!fullName || !email || !password)
     {
         return next(new AppError('All fields are required',400));
     }
     // check user exit by using email.
-    const userExists = await User.finsdOne({email});
+    const userExists = await User.findOne({email});
     if(userExists){
         return next(new AppError('Email already exists',400));
     }
     //create user 
     const user = await User.create({
-        fullname,
+        fullName,
         email,
         password,
         avatar:{
             public_id:email,
-            // secure_url:
+            secure_url:'https://res.cloudinary.com/du9jzqlpt/image/upload/v1674647316/avatar_drzgxv.jpg'
         }
     });
     // check user is stored or not
@@ -54,9 +54,10 @@ const register = async (req,res,next)=>{
                 // remove file from server
                 fs.rm(`uploads/${req.file.filename}`)
             }
-        } catch (e) {
+        } catch (error) {
+             console.log(error);
             return next(
-                new AppError(error || 'File not uplades,please try again',500)
+                new AppError(error || 'File not uplades,please try again',400)
             )
         }
     }
@@ -77,7 +78,7 @@ const register = async (req,res,next)=>{
 })
 
 };
-const login =async (req,res)=>{
+const login =async (req,res,next)=>{
     try {
         const{email,password} = req.body;
     if(!email || !password)
@@ -86,7 +87,7 @@ const login =async (req,res)=>{
     }
     const user = await User.findOne({
         email
-    }).select('+password');   // explicity getting the password
+    }).select('+password');   // explicity getting the password because password by default false in user model
     if(!user || !user.comparePassword(password))
     {
         return next(new AppError('Email or password does not exist',400));
@@ -102,6 +103,7 @@ const login =async (req,res)=>{
         user,
     });
     } catch (e) {
+        console.log(e);
         return next(new AppError(e.message,500));
     }
 
@@ -118,7 +120,7 @@ const logout =(req,res)=>{
         message:'User logged out successfully'
     })
 };
-const getProfile =async (req,res)=>{
+const getProfile =async (req,res,next)=>{
     try {
         const userId =req.user.id;
         const user = await User.findById(userId);
@@ -170,7 +172,7 @@ const forgotPassword =async (req,res,next)=>{
             return next(new AppError(e.message,500));
         }
 }
-const resetPassword = async(req,res)=>{
+const resetPassword = async(req,res,next)=>{
 
     const {resetToken}=req.params;
     const {password}=req.body;
