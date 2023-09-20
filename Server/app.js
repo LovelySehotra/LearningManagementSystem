@@ -16,9 +16,10 @@ app.use(cors({
 origin:[process.env.FRONTEND_URL],
 credentials:true
 }));
+app.use(morgan('dev'));// it is used to see in terminal thsat what  user access.
 app.use(cookieParser());//The token stored in cookie are parsed
 
-app.use(morgan('dev'));// it is used to see in terminal thsat what  user access.
+
 
 app.use('/ping',function(req,res){
     res.send('/pong');
