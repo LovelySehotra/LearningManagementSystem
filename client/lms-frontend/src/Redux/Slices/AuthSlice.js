@@ -25,7 +25,7 @@ const authSlice = createSlice({
 });
 export const createAccount = createAsyncThunk("/auth/signup",async(data)=>{
     try {
-        const res =  axiosInstance.post("user/register",data);
+        const res =  axiosInstance.post("/user/register",data);
         toast.promise(res,{
             loading:"wait! creating your account",
             success:(data)=>{
@@ -40,7 +40,7 @@ export const createAccount = createAsyncThunk("/auth/signup",async(data)=>{
 })
 export const login = createAsyncThunk("/auth/login",async(data)=>{
     try {
-        const res =   axiosInstance.post("user/login",data);
+        const res =   axiosInstance.post("/user/login",data);
         toast.promise(res,{
             loading:"wait! authentication in progress...",
             success:(data)=>{
