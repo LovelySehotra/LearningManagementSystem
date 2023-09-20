@@ -1,19 +1,20 @@
-import express from 'express';
-import cors from'cors';
 import cookieParser from 'cookie-parser';
+config();
+import express from 'express';
 import {config} from 'dotenv';
+import cors from'cors';
 import morgan from 'morgan';
 import userRoutes from './routes/user.routrs.js';
 import courseRoutes from './routes/course.routes.js';
 import paymentRoutes from './routes/payment.routes.js'
 import errorMiddleware from './middlewares/error.middleware.js';
-config();
+
 const app = express();
 app.use(express.json());//parse the body
 app.use(express.urlencoded({extended:true}));
 app.use(cors({
 origin:[process.env.FRONTEND_URL],
-credential:true
+credentials:true
 }));
 app.use(cookieParser());//The token stored in cookie are parsed
 
