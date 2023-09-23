@@ -5,28 +5,28 @@ import axiosInstance from "../Helpers/axiosInstance";
 import { isEmail } from "../Helpers/regexMatcher";
 import HomeLayout from "../Layouts/HomeLayout";
 
-function Contact(){
-    const [userInput,setUserInput] =useState({
+function Contact() {
+    const [userInput, setUserInput] = useState({
 
-        name:"",
-        email:"",
-        message:"",
+        name: "",
+        email: "",
+        message: "",
     });
     function handleInputChange(e) {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setUserInput({
             ...userInput,
             [name]: value
         })
-    } 
-     async function onFormSubmit(e) {
+    }
+    async function onFormSubmit(e) {
         e.preventDefault();
-        if(!userInput.email || !userInput.name || !userInput.message) {
+        if (!userInput.email || !userInput.name || !userInput.message) {
             toast.error("All fields are mandatory");
             return;
         }
 
-        if(!isEmail(userInput.email)) {
+        if (!isEmail(userInput.email)) {
             toast.error("Invalid email");
             return;
         }
@@ -40,7 +40,7 @@ function Contact(){
             });
             const contactResponse = await response;
             console.log(contactResponse)
-            if(contactResponse?.data?.success) {
+            if (contactResponse?.data?.success) {
                 setUserInput({
                     name: "",
                     email: "",
@@ -51,7 +51,7 @@ function Contact(){
             toast.error("operation failed....")
         }
     }
-    
+
     return (
         <HomeLayout>
             <div className="flex  items-center justify-center h-[100vh]">
@@ -59,50 +59,50 @@ function Contact(){
                     <h1 className="text-3xl font-semibold">Contact Form</h1>
                     <div className="flex flex-col w-full gap-1 transparent">
                         <label htmlFor="name" className="text-xl font-semibold">Name</label>
-                        <input 
-                        className="bg-transparent border px-2 py-1 rounded-sm"
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="Enter your name"
-                        onChange={handleInputChange}
-                        value={userInput.name}
-                        
+                        <input
+                            className="bg-transparent border px-2 py-1 rounded-sm"
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Enter your name"
+                            onChange={handleInputChange}
+                            value={userInput.name}
+
                         />
                     </div>
                     <div className="flex flex-col w-full gap-1">
                         <label htmlFor="name" className="text-xl font-semibold">Email</label>
-                        <input 
-                           className="bg-transparent border px-2 py-1 rounded-sm"
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="Enter your name"
-                        onChange={handleInputChange}
-                        value={userInput.email}
-                        
+                        <input
+                            className="bg-transparent border px-2 py-1 rounded-sm"
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Enter your name"
+                            onChange={handleInputChange}
+                            value={userInput.email}
+
                         />
                     </div>
                     <div className="flex flex-col w-full gap-1">
                         <label htmlFor="name" className="text-xl font-semibold">Message</label>
                         <textarea
-                        className="bg-transparent border px-2 py-1 rounded-sm h-40"
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="Enter your name"
-                        onChange={handleInputChange}
-                        value={userInput.message}
-                        
+                            className="bg-transparent border px-2 py-1 rounded-sm h-40"
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Enter your name"
+                            onChange={handleInputChange}
+                            value={userInput.message}
+
                         />
                     </div>
-                    <button type="submit" 
-                    className="w-full bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 font-semibold text-lg cursor-pointer">Submit</button>
+                    <button type="submit"
+                        className="w-full bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 font-semibold text-lg cursor-pointer">Submit</button>
                 </form>
             </div>
 
         </HomeLayout>
     )
-   
+
 }
 export default Contact;
