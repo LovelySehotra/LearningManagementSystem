@@ -123,7 +123,7 @@ const logout = (req, res) => {
     })
 };
 
-const getProfile = async (req, res) => {
+const getProfile = async (req, res,next) => {
     try {
         const userId = req.user.id;
         const user = await User.findById(userId);
@@ -251,9 +251,10 @@ const changePassword = async (req, res) => {
     });
 }
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res,next) => {
     const { fullName } = req.body;
-    const { id } = req.user.id;
+    const { id } = req.params;
+    console.log(`Hello ${id}`);
 
     const user = await User.findById(id);
 
@@ -263,7 +264,8 @@ const updateUser = async (req, res) => {
         )
     }
 
-    if (req.fullName) {
+    if (fullName) {
+        console.log("name")
         user.fullName = fullName;
     }
 
@@ -294,10 +296,12 @@ const updateUser = async (req, res) => {
     }
 
     await user.save();
+    // console.log("succes")
 
     res.status(200).json({
         success: true,
         message: 'User details updated successfully!'
+
     });
 
 }

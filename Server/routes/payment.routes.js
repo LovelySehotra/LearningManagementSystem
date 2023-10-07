@@ -18,13 +18,6 @@ router
     isLoggedIn,
     buySubscription
 )
-
-router
-    .route('/subscribe')
-    .post(
-        isLoggedIn,
-        buySubscription
-    )
 router
 .route('/verify')
 .post(
